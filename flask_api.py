@@ -3,11 +3,11 @@ import random
 
 app = Flask(__name__)
 
-numbers = []
 token_dict = {
     'default': [4, 8, 15, 16, 23, 42],
     '12345': [1, 2, 3, 4, 5],
 }
+
 
 @app.route('/')
 def hello_world():
@@ -20,13 +20,11 @@ def add_number():
     if request.args.get('token') is not None:
         token_key = request.args.get('token')
         if token_key in token_dict.keys():
-            token_dict.update()
+            token_dict[token_key].append(num)
         else:
             return 'No such token'
     else:
-        return 'mock'
-    # numbers.append(num)
-    # return str(num)
+        token_dict['default'].append(num)
 
 
 @app.route('/sum', methods=['GET'])
