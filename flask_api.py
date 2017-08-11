@@ -1,9 +1,13 @@
-from flask import Flask, request
+from flask import Flask, request, session
+import random
 
 app = Flask(__name__)
 
 numbers = []
+token_dict = {
+    'default': [4, 8, 15, 16, 23, 42],
 
+}
 
 @app.route('/')
 def hello_world():
@@ -49,6 +53,13 @@ def get_std_deviation():
     std_deviation = float((variance / len(numbers)) ** 0.5)
     return str(std_deviation)
 
+
+@app.route('/new', methods=['GET'])
+def generate_token():
+    token = random.getrandbits(32)
+    token_dict.update({token: [0]})
+    # session['api_session_token'] = token
+    return str(token)
 
 if __name__ == '__main__':
     app.run()
