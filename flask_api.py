@@ -131,6 +131,21 @@ def get_std_deviation():
         return str(std_deviation)
 
 
+@app.route('/clear', methods=['GET'])
+def clear():
+    if request.args.get('token') is not None:
+        try:
+            token_key = request.args.get('token')
+            if token_key in token_dict.keys():
+                token_dict[token_key] = 0
+            else:
+                return 'No such token'
+        except:
+            return 'No such token'
+    else:
+        token_dict['default'] = 0
+
+
 @app.route('/new', methods=['GET'])
 def generate_token():
     token = str(random.getrandbits(32))
