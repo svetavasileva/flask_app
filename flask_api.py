@@ -6,7 +6,7 @@ app = Flask(__name__)
 numbers = []
 token_dict = {
     'default': [4, 8, 15, 16, 23, 42],
-
+    '125451': [1, 2, 3, 4, 5],
 }
 
 @app.route('/')
@@ -23,10 +23,27 @@ def add_number():
 
 @app.route('/sum', methods=['GET'])
 def get_sum():
-    summ = 0
-    for each in numbers:
-        summ += each
-    return str(summ)
+    token_key = request.args.get('token')
+    if token_key is not None or token_key in token_dict.values():
+        try:
+            current = token_dict.get(token_key)
+            summ = 0
+            for each in current:
+                summ += each
+            return str(summ)
+        except:
+            return 'No such token'
+    else:
+        current = token_dict.get('default')
+        summ = 0
+        for each in current:
+            summ += each
+        return str(summ)
+
+    # summ = 0
+    # for each in numbers:
+    #     summ += each
+    # return str(summ)
 
 
 @app.route('/count', methods=['GET'])
@@ -56,7 +73,7 @@ def get_std_deviation():
 
 @app.route('/new', methods=['GET'])
 def generate_token():
-    token = random.getrandbits(32)
+    token = str(random.getrandbits(32))
     token_dict.update({token: [0]})
     # session['api_session_token'] = token
     return str(token)
