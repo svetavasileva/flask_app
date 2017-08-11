@@ -52,27 +52,83 @@ def get_sum():
 
 @app.route('/count', methods=['GET'])
 def get_count():
-    count = 0
-    for each in numbers:
-        count += 1
-    return str(count)
+    if request.args.get('token') is not None:
+        try:
+            token_key = request.args.get('token')
+            if token_key in token_dict.keys():
+                current = token_dict.get(token_key)
+                count = 0
+                for each in current:
+                    count += 1
+                return str(count)
+            else:
+                return 'No such token'
+        except:
+            return 'No such token'
+    else:
+        current = token_dict.get('default')
+        count = 0
+        for each in current:
+            count += 1
+        return str(count)
 
 
 @app.route('/avg', methods=['GET'])
 def get_average():
-    summ = int(get_sum())
-    average = summ / float(len(numbers))
-    return str(average)
+    if request.args.get('token') is not None:
+        try:
+            token_key = request.args.get('token')
+            if token_key in token_dict.keys():
+                current = token_dict.get(token_key)
+                summ = 0
+                for each in current:
+                    summ += each
+                average = summ / float(len(current))
+                return str(average)
+            else:
+                return 'No such token'
+        except:
+            return 'No such token'
+    else:
+        current = token_dict.get('default')
+        summ = 0
+        for each in current:
+            summ += each
+        average = summ / float(len(current))
+        return str(average)
 
 
 @app.route('/std', methods=['GET'])
 def get_std_deviation():
-    average = float(get_average())
-    variance = 0
-    for each in numbers:
-        variance += (average - each) ** 2
-    std_deviation = float((variance / len(numbers)) ** 0.5)
-    return str(std_deviation)
+    if request.args.get('token') is not None:
+        try:
+            token_key = request.args.get('token')
+            if token_key in token_dict.keys():
+                current = token_dict.get(token_key)
+                summ = 0
+                for each in current:
+                    summ += each
+                average = summ / float(len(current))
+                variance = 0
+                for each in current:
+                    variance += (average - each) ** 2
+                std_deviation = float((variance / len(current)) ** 0.5)
+                return str(std_deviation)
+            else:
+                return 'No such token'
+        except:
+            return 'No such token'
+    else:
+        current = token_dict.get('default')
+        summ = 0
+        for each in current:
+            summ += each
+        average = summ / float(len(current))
+        variance = 0
+        for each in current:
+            variance += (average - each) ** 2
+        std_deviation = float((variance / len(current)) ** 0.5)
+        return str(std_deviation)
 
 
 @app.route('/new', methods=['GET'])
