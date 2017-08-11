@@ -6,7 +6,7 @@ app = Flask(__name__)
 numbers = []
 token_dict = {
     'default': [4, 8, 15, 16, 23, 42],
-    '125451': [1, 2, 3, 4, 5],
+    '12345': [1, 2, 3, 4, 5],
 }
 
 @app.route('/')
@@ -17,20 +17,31 @@ def hello_world():
 @app.route('/add', methods=['POST'])
 def add_number():
     num = int(request.args.get('num'))
-    numbers.append(num)
-    return str(num)
+    if request.args.get('token') is not None:
+        token_key = request.args.get('token')
+        if token_key in token_dict.keys():
+            token_dict.update()
+        else:
+            return 'No such token'
+    else:
+        return 'mock'
+    # numbers.append(num)
+    # return str(num)
 
 
 @app.route('/sum', methods=['GET'])
 def get_sum():
-    token_key = request.args.get('token')
-    if token_key is not None or token_key in token_dict.values():
+    if request.args.get('token') is not None:
         try:
-            current = token_dict.get(token_key)
-            summ = 0
-            for each in current:
-                summ += each
-            return str(summ)
+            token_key = request.args.get('token')
+            if token_key in token_dict.keys():
+                current = token_dict.get(token_key)
+                summ = 0
+                for each in current:
+                    summ += each
+                return str(summ)
+            else:
+                return 'No such token'
         except:
             return 'No such token'
     else:
@@ -39,11 +50,6 @@ def get_sum():
         for each in current:
             summ += each
         return str(summ)
-
-    # summ = 0
-    # for each in numbers:
-    #     summ += each
-    # return str(summ)
 
 
 @app.route('/count', methods=['GET'])
